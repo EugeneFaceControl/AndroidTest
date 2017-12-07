@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using AndroidTest.PageObjects;
 using NUnit.Framework;
 using Xamarin.UITest;
-using Xamarin.UITest.Queries;
 using Xamarin.UITest.Android;
 
 namespace AndroidTest
@@ -12,9 +10,6 @@ namespace AndroidTest
     [TestFixture]
     public class Tests
     {
-        AndroidApp app;
-        TestSettings TestSettings => new TestSettings();
-
         [SetUp]
         public void BeforeEachTest()
         {
@@ -24,9 +19,12 @@ namespace AndroidTest
                 .Android
                 // TODO: Update this path to point to your Android app and uncomment the
                 // code if the app is not included in the solution.
-                .ApkFile(TestSettings.ApkPath)
+                .ApkFile(@"..\..\Resources\test.apk")
                 .StartApp();
         }
+
+        private AndroidApp app;
+        private StartPage StartPage => new StartPage(app);
 
         public void Steps()
         {
@@ -40,23 +38,6 @@ namespace AndroidTest
         [Test]
         public void AppLaunches()
         {
-//            app.Screenshot("First screen.");
-            for (int i = 0; i < 5; i++)
-            {
-                app.Tap(c => c.Id("nextView"));
-            }
-
-            var firstElements = app.Query(c => c.Id("name")).Select(x => x.Text).ToList();
-            app.ScrollDown();
-            var secondElements = app.Query(c => c.Id("name")).Select(x => x.Text).ToList();
-
-
-            foreach (var s in secondElements)
-            {
-                firstElements.Add(s);
-            }
-
-            var elements = firstElements.Distinct().ToArray();
             string[] expectedElements =
             {
                 "Электроника",
@@ -70,14 +51,25 @@ namespace AndroidTest
                 "Работа и офис"
             };
 
+
+            for (var i = 0; i < 5; i++)
+                app.Tap(c => c.Id("nextView"));
+
+            var firstElements = app.Query(c => c.Id("name")).Select(x => x.Text).ToList();
+            app.ScrollDown();
+            var secondElements = app.Query(c => c.Id("name")).Select(x => x.Text).ToList();
+
+            foreach (var s in secondElements)
+                firstElements.Add(s);
+
+            var elements = firstElements.Distinct().ToArray();
+
             var expected = expectedElements.ToArray();
 
-            for (int i = 0; i < elements.Count(); i++)
-            {
+            for (var i = 0; i < elements.Length; i++)
                 Console.WriteLine($"{elements[i]} = {expected[i]} : {elements[i] == expected[i]}");
-            }
 
-            Assert.AreEqual(9, elements.Count());
+            Assert.AreEqual(9, elements.Length);
             Assert.IsTrue(expected.SequenceEqual(elements));
         }
     }
