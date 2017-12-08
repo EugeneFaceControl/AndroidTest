@@ -45,7 +45,7 @@ namespace AndroidTest
         [Test]
         public void AppLaunches()
         {
-            string[] expectedElements =
+            string[] expected =
             {
                 "Электроника",
                 "Компьютеры и сети",
@@ -58,47 +58,22 @@ namespace AndroidTest
                 "Работа и офис"
             };
 
+            var topics = _homePage.CountTopics();
 
-            var firstElements = app.Query(c => c.Id("name")).Select(x => x.Text).ToList();
-            app.ScrollDown();
-            var secondElements = app.Query(c => c.Id("name")).Select(x => x.Text).ToList();
+            for (var i = 0; i < topics.Length; i++)
+                Console.WriteLine($"{topics[i]} = {expected[i]} : {topics[i] == expected[i]}");
 
-            foreach (var s in secondElements)
-                firstElements.Add(s);
-
-            var elements = firstElements.Distinct().ToArray();
-
-            var expected = expectedElements.ToArray();
-
-            for (var i = 0; i < elements.Length; i++)
-                Console.WriteLine($"{elements[i]} = {expected[i]} : {elements[i] == expected[i]}");
-
-            Assert.AreEqual(9, elements.Length);
-            Assert.IsTrue(expected.SequenceEqual(elements));
-
-            app.ScrollUp();
-            app
-                .Repl()
-                ;
+            Assert.AreEqual(9, topics.Length);
+            Assert.IsTrue(expected.SequenceEqual(topics));
         }
-
-        private string _searchMenu = "menu_search";
-        private string _expectedCount = "16129";
-        private Func<AppQuery, AppQuery> _resultCount = c => c.Id("text");
 
         [Test]
         public void TestSearch()
         {
-            app.Tap(c => c.Id(_searchMenu));
-            app.EnterText(c => c.Id(_searchMenu), "samsung");
-            app.DismissKeyboard();
+            string count = _homePage.GoToSearchPage().Search("samsung").CountResults();
+            string expectedCount = "16129";
 
-            app.WaitForElement(_resultCount);
-            string countOfResults = app.Query(_resultCount).Select(x => x.Text).First();
-            var result = Regex.Match(countOfResults, @"\D+ (\d+) \D+");
-            string count = result.Groups.Cast<Group>().Select(x => x.Value).Skip(1).First();
-
-            Assert.AreEqual(_expectedCount, count);
+            Assert.AreEqual(expectedCount, count);
         }
     }
 }

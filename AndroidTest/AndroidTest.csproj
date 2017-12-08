@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PageObjects\HomePage.cs" />
+    <Compile Include="PageObjects\SearchPage.cs" />
+    <Compile Include="PageObjects\SearchResultsPage.cs" />
     <Compile Include="PageObjects\StartPage.cs" />
     <Compile Include="Tests.cs" />
     <Compile Include="TestSettings.cs" />
