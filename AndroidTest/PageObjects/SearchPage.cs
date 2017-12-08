@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.UITest.Android;
+﻿using Xamarin.UITest.Android;
 
 namespace AndroidTest.PageObjects
 {
     public class SearchPage
     {
-        private AndroidApp app;
+        private readonly AndroidApp app;
 
         public SearchPage(AndroidApp app)
         {

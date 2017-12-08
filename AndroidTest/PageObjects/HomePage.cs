@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Xamarin.UITest.Android;
-using Xamarin.UITest.Queries;
 
 namespace AndroidTest.PageObjects
 {
     public class HomePage
     {
-        private AndroidApp app;
-        private string nextButton = "name";
+        private readonly AndroidApp app;
+        private readonly string nextButton = "name";
 
         public HomePage(AndroidApp app)
         {

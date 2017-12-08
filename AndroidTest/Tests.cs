@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using AndroidTest.PageObjects;
 using NUnit.Framework;
 using Xamarin.UITest;
 using Xamarin.UITest.Android;
-using Xamarin.UITest.Queries;
 
 namespace AndroidTest
 {
     [TestFixture]
     public class Tests
     {
-        private HomePage _homePage;
-
         [SetUp]
         public void BeforeEachTest()
         {
@@ -30,20 +25,28 @@ namespace AndroidTest
             _homePage = StartPage.GoToHomePage();
         }
 
+        private HomePage _homePage;
+
         private AndroidApp app;
         private StartPage StartPage => new StartPage(app);
 
-        public void Steps()
+        public void CompareTwoArrays<T>(T[] firstArray, T[] secondArray)
         {
-            //x5
-            app.Tap(c => c.Id("nextView"));
-            app
-                .Repl()
-                ;
+            for (var i = 0; i < firstArray.Length; i++)
+                Console.WriteLine($"{firstArray[i]} = {secondArray[i]} : {firstArray[i].Equals(secondArray[i])}");
         }
 
         [Test]
-        public void AppLaunches()
+        public void TestSearch()
+        {
+            var count = _homePage.GoToSearchPage().Search("samsung").CountResults();
+            var expectedCount = "16129";
+
+            Assert.AreEqual(expectedCount, count);
+        }
+
+        [Test]
+        public void TestTopics()
         {
             string[] expected =
             {
@@ -60,20 +63,9 @@ namespace AndroidTest
 
             var topics = _homePage.CountTopics();
 
-            for (var i = 0; i < topics.Length; i++)
-                Console.WriteLine($"{topics[i]} = {expected[i]} : {topics[i] == expected[i]}");
 
             Assert.AreEqual(9, topics.Length);
             Assert.IsTrue(expected.SequenceEqual(topics));
-        }
-
-        [Test]
-        public void TestSearch()
-        {
-            string count = _homePage.GoToSearchPage().Search("samsung").CountResults();
-            string expectedCount = "16129";
-
-            Assert.AreEqual(expectedCount, count);
         }
     }
 }
