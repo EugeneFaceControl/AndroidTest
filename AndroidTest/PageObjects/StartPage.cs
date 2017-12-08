@@ -21,7 +21,7 @@ namespace AndroidTest.PageObjects
         public HomePage GoToHomePage()
         {
             for (var i = 0; i < 5; i++)
-                app.Tap(c => c.Id("nextView"));
+                app.Tap(nextButton);
             return new HomePage(app);
         }
     }
